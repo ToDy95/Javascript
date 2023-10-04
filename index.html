@@ -6,11 +6,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./index.css">
-    <script src="./index.js"></script>
+    <!-- <script src="./index.js"></script> -->
+    <script>
+      function getRandomHexColor() {
+        // Generate random values for R, G, and B components
+        const r = Math.floor(Math.random() * 256); // 0 to 255
+        const g = Math.floor(Math.random() * 256); // 0 to 255
+        const b = Math.floor(Math.random() * 256); // 0 to 255
 
+        // Convert the values to hexadecimal format
+        const hexR = r.toString(16).padStart(2, '0'); // Ensure two digits
+        const hexG = g.toString(16).padStart(2, '0');
+        const hexB = b.toString(16).padStart(2, '0');
+
+        // Combine the hex values to create a hex color code (e.g., "#RRGGBB")
+        const hexColor = `#${hexR}${hexG}${hexB}`;
+
+        return hexColor;
+      }
+
+
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const myTableBody = document.getElementById('myTableBody');
+        let data = [];
+
+        const callApi = async () => {
+          try {
+            let call = await fetch('https://jsonplaceholder.typicode.com/users');
+            let response = await call.json();
+            await data.push(response);
+
+            return data;
+          } catch (error) {
+            console.error(error);
+            throw error;
+          }
+        };
+
+        Promise.resolve(callApi()).then(apiData => {
+          let randomColor;
+          apiData.forEach(item => {
+
+            item.forEach(e => {
+              randomColor = getRandomHexColor();
+              const newRow = document.createElement('tr');
+              newRow.id = e.id
+              newRow.style.background = randomColor;
+
+
+              const nameCell = document.createElement('td');
+              nameCell.style.color = '#fff'
+              nameCell.textContent = e.name
+
+
+              const userNameCell = document.createElement('td');
+              userNameCell.textContent = e.username
+              const emailCell = document.createElement('td');
+              emailCell.textContent = e.email
+              const phoneCell = document.createElement('td');
+              phoneCell.textContent = e.phone
+              const webSiteCell = document.createElement('td');
+              webSiteCell.textContent = e.website
+
+              newRow.appendChild(nameCell)
+              newRow.appendChild(userNameCell)
+              newRow.appendChild(emailCell)
+              newRow.appendChild(phoneCell)
+              newRow.appendChild(webSiteCell)
+
+              myTableBody.appendChild(newRow);
+              console.log(newRow)
+            }
+
+            )
+          });
+        }).catch(error => {
+          console.error(error);
+        });
+      })
+    </script>
   </head>
 
   <body>
+    <table>
+      <thead>
+        <tr>
+          <th>Nume</th>
+          <th>UserName</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>webSiteCell</th>
+        </tr>
+      </thead>
+      <tbody id="myTableBody">
+
+      </tbody>
+    </table>
 
   </body>
 
